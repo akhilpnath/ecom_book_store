@@ -27,20 +27,15 @@ class AdminProfileController extends Controller
 
         $user = Auth::user();
 
-        // Update name and email
         $user->name = $request->name;
         $user->email = $request->email;
 
-        // Update image if provided
         if ($request->hasFile('image')) {
-            // Delete the old image
             Storage::disk('public')->delete($user->image);
-            // Store the new image
             $imagePath = $request->file('image')->store('uploaded_img', 'public');
             $user->image = $imagePath;
         }
 
-        // Update password if provided
         if ($request->filled('update_pass') && $request->filled('new_pass') && $request->filled('confirm_pass')) {
             if (!Hash::check($request->update_pass, $user->password)) {
                 return redirect()->back()->withErrors(['update_pass' => 'Old password is incorrect.']);

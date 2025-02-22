@@ -6,7 +6,7 @@
     <div class="box-container">
         @foreach ($users as $user)
         <div class="box" style="{{ $user->id === auth()->id() ? 'display:none;' : '' }}">
-            <img src="{{ asset('uploaded_img/' . $user->image) }}" alt="">
+        <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" style="width: 150px">
             <p>User ID: <span>{{ $user->id }}</span></p>
             <p>Username: <span>{{ $user->name }}</span></p>
             <p>Email: <span>{{ $user->email }}</span></p>

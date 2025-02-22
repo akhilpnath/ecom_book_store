@@ -27,12 +27,12 @@
 </section>
 
 <section class="show-products">
-    <h1 class="title">Products Added</h1>
+    <h1 class="title">Products List</h1>
     <div class="box-container">
         @foreach($products as $product)
         <div class="box">
             <div class="price">${{ $product->price }}/-</div>
-            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="width: 150px">
             <div class="name">{{ $product->name }}</div>
             <div class="cat">{{ $product->category }}</div>
             <div class="details">{{ $product->details }}</div>

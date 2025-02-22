@@ -48,7 +48,7 @@ class AuthController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $imagePath = $request->file('image')->store('uploaded_img', 'public');
+        $imagePath = $request->file('image')->storeAs('images/user_image', time() . '.' . $request->file('image')->getClientOriginalExtension(), 'public');
 
         User::create([
             'name' => $request->name,

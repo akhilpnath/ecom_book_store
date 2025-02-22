@@ -13,7 +13,7 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->insert([
             [
                 'name' => 'Admin User',
-                'email' => 'admin@example.com',
+                'email' => 'admin@gmail.com',
                 'password' => Hash::make('password123'),
                 'user_type' => 'admin',
                 'image' => 'admin.jpg',
@@ -21,8 +21,8 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Regular User',
-                'email' => 'user@example.com',
+                'name' => 'User',
+                'email' => 'user@gmail.com',
                 'password' => Hash::make('password123'),
                 'user_type' => 'user',
                 'image' => 'user.jpg',

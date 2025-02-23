@@ -1,67 +1,150 @@
 @extends('layouts.admin')
 
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts/dist/apexcharts.css">
+@endpush
+
 @section('content')
-<div class="dashboard">
-    <h1 class="title">Dashboard</h1>
-    <div style="padding: 30px;">
-        <div class="box-container">
-            <!-- Total Pendings -->
-            <div class="box">
-                <h3>${{ $totalPendings }}/-</h3>
-                <p>Total Pendings</p>
-                <a href="{{ route('admin.orders.index') }}" class="btn">See Orders</a>
-            </div>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Dashboard</h1>
+    </div>
 
-            <!-- Completed Orders -->
-            <div class="box">
-                <h3>${{ $totalCompleted }}/-</h3>
-                <p>Completed Orders</p>
-                <a href="{{ route('admin.orders.index') }}" class="btn">See Orders</a>
-            </div>
+    <div class="row g-3">
+        @php
+         $cards = [
+            ['title' => 'Total Pendings', 'value' => $totalPendings, 'color' => 'danger', 'icon' => 'clock', 'route' => 'admin.orders.index'],
+            ['title' => 'Completed Orders', 'value' => $totalCompleted, 'color' => 'success', 'icon' => 'check-circle', 'route' => 'admin.orders.index'],
+            ['title' => 'Orders Placed', 'value' => $totalOrders, 'color' => 'primary', 'icon' => 'shopping-cart', 'route' => 'admin.orders.index'],
+            ['title' => 'Products Added', 'value' => $totalProducts, 'color' => 'warning', 'icon' => 'box', 'route' => 'admin.products.index'],
+            ['title' => 'Total Users', 'value' => $totalUsers, 'color' => 'info', 'icon' => 'users', 'route' => 'admin.users.index'],
+            ['title' => 'Total Admins', 'value' => $totalAdmins, 'color' => 'dark', 'icon' => 'user-shield', 'route' => 'admin.users.index'],
+            ['title' => 'Total Accounts', 'value' => $totalAccounts, 'color' => 'secondary', 'icon' => 'users-cog', 'route' => 'admin.users.index'],
+            ['title' => 'Total Messages', 'value' => $totalMessages, 'color' => 'primary', 'icon' => 'envelope', 'route' => 'admin.messages.index']
+        ];
+        @endphp
 
-            <!-- Orders Placed -->
-            <div class="box">
-                <h3>{{ $totalOrders }}</h3>
-                <p>Orders Placed</p>
-                <a href="{{ route('admin.orders.index') }}" class="btn">See Orders</a>
+        @foreach($cards as $card)
+        <div class="col-sm-6 col-lg-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-{{ $card['icon'] }} fa-2x text-{{ $card['color'] }}"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="h2 mb-0 text-{{ $card['color'] }}">{{ number_format($card['value']) }}</h3>
+                            <p class="text-muted mb-0">{{ $card['title'] }}</p>
+                        </div>
+                        <a href="{{ route($card['route']) }}" class="stretched-link"></a>
+                    </div>
+                </div>
             </div>
+        </div>
+        @endforeach
+    </div>
 
-            <!-- Products Added -->
-            <div class="box">
-                <h3>{{ $totalProducts }}</h3>
-                <p>Products Added</p>
-                <a href="{{ route('admin.products.index') }}" class="btn">See Products</a>
+    <div class="row mt-4">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Orders Overview</h5>
+                    <div id="ordersChart"></div>
+                </div>
             </div>
-
-            <!-- Total Users -->
-            <div class="box">
-                <h3>{{ $totalUsers }}</h3>
-                <p>Total Users</p>
-                <a href="{{ route('admin.users.index') }}" class="btn">See Accounts</a>
-            </div>
-
-            <!-- Total Admins -->
-            <div class="box">
-                <h3>{{ $totalAdmins }}</h3>
-                <p>Total Admins</p>
-                <a href="{{ route('admin.users.index') }}" class="btn">See Accounts</a>
-            </div>
-
-            <!-- Total Accounts -->
-            <div class="box">
-                <h3>{{ $totalAccounts }}</h3>
-                <p>Total Accounts</p>
-                <a href="{{ route('admin.users.index') }}" class="btn">See Accounts</a>
-            </div>
-
-            <!-- Total Messages -->
-            <div class="box">
-                <h3>{{ $totalMessages }}</h3>
-                <p>Total Messages</p>
-                <a href="{{ route('admin.messages.index') }}" class="btn">See Messages</a>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Users Growth</h5>
+                    <div id="usersChart"></div>
+                </div>
             </div>
         </div>
     </div>
-
 </div>
 @endsection
+
+@push('scripts')
+
+<script>
+    var ordersChart = new ApexCharts(document.querySelector("#ordersChart"), {
+        chart: { 
+            type: 'line',
+            height: 350,
+            toolbar: {
+                show: false
+            }
+        },
+        stroke: {
+            curve: 'smooth',
+            width: 3
+        },
+        colors: ['#4f46e5'],
+        series: [{ 
+            name: "Orders",
+            data: [10, 50, 40, 70, 100, 90]
+        }],
+        xaxis: {
+            categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+            labels: {
+                style: {
+                    colors: '#6b7280'
+                }
+            }
+        },
+        yaxis: {
+            labels: {
+                style: {
+                    colors: '#6b7280'
+                }
+            }
+        },
+        grid: {
+            borderColor: '#e5e7eb',
+            strokeDashArray: 4
+        }
+    });
+    ordersChart.render();
+
+    var usersChart = new ApexCharts(document.querySelector("#usersChart"), {
+        chart: { 
+            type: 'bar',
+            height: 350,
+            toolbar: {
+                show: false
+            }
+        },
+        colors: ['#818cf8'],
+        series: [{
+            name: "Users",
+            data: [5, 15, 20, 25, 35, 45]
+        }],
+        plotOptions: {
+            bar: {
+                borderRadius: 4
+            }
+        },
+        xaxis: {
+            categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+            labels: {
+                style: {
+                    colors: '#6b7280'
+                }
+            }
+        },
+        yaxis: {
+            labels: {
+                style: {
+                    colors: '#6b7280'
+                }
+            }
+        },
+        grid: {
+            borderColor: '#e5e7eb',
+            strokeDashArray: 4
+        }
+    });
+    usersChart.render();
+</script>
+@endpush

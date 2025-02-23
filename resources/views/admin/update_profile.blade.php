@@ -1,53 +1,82 @@
 @extends('layouts.admin')
 
 @section('content')
-<section class="update-profile">
-    <h1 class="title">Update Profile</h1>
+<div class="container py-4">
+    <h1 class="mb-4">Update Profile</h1>
 
+    <!-- Success Message -->
     @if(session('success'))
-        <div class="message">
-            <span>{{ session('success') }}</span>
-            <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
+    <!-- Error Messages -->
     @if($errors->any())
-        <div class="message">
-            @foreach($errors->all() as $error)
-                <span>{{ $error }}</span>
-            @endforeach
-            <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="m-0 ps-3">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
-    <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
-        <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="{{ Auth::user()->name }}">
-        <div class="flex">
-            <div class="inputBox">
-                <span>Username:</span>
-                <input type="text" name="name" value="{{ Auth::user()->name }}" placeholder="Update username" required class="box">
-                <span>Email:</span>
-                <input type="email" name="email" value="{{ Auth::user()->email }}" placeholder="Update email" required class="box">
-                <span>Update Picture:</span>
-                <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" class="box">
-                <input type="hidden" name="old_image" value="{{ Auth::user()->image }}">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="{{ Auth::user()->name }}" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #ddd;">
             </div>
-            <div class="inputBox">
-                <input type="hidden" name="old_pass" value="{{ Auth::user()->password }}">
-                <span>Old Password:</span>
-                <input type="password" name="update_pass" placeholder="Enter previous password" class="box">
-                <span>New Password:</span>
-                <input type="password" name="new_pass" placeholder="Enter new password" class="box">
-                <span>Confirm Password:</span>
-                <input type="password" name="confirm_pass" placeholder="Confirm new password" class="box">
-            </div>
+
+            <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" name="name" value="{{ Auth::user()->name }}" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" value="{{ Auth::user()->email }}" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Update Picture</label>
+                            <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" class="form-control">
+                            <input type="hidden" name="old_image" value="{{ Auth::user()->image }}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="hidden" name="old_pass" value="{{ Auth::user()->password }}">
+                        <div class="mb-3">
+                            <label class="form-label">Old Password</label>
+                            <input type="password" name="update_pass" class="form-control" placeholder="Enter previous password">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">New Password</label>
+                            <input type="password" name="new_pass" class="form-control" placeholder="Enter new password">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password" name="confirm_pass" class="form-control" placeholder="Confirm new password">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-save me-2"></i> Update Profile
+                    </button>
+                    <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-arrow-left me-2"></i> Go Back
+                    </a>
+                </div>
+            </form>
         </div>
-        <div class="flex-btn">
-            <button type="submit" class="btn" name="update_profile">Update Profile</button>
-            <a href="{{ route('admin.dashboard') }}" class="option-btn">Go Back</a>
-        </div>
-    </form>
-</section>
+    </div>
+</div>
 @endsection

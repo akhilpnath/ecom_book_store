@@ -28,6 +28,8 @@ class AdminProductController extends Controller
             'category' => 'required|string|max:20',
             'details' => 'required|string|max:500',
             'price' => 'required|numeric|min:0',
+            'authors' => 'required|string|max:500',
+            'language' => 'required|string|max:500',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -42,8 +44,11 @@ class AdminProductController extends Controller
             'name' => $request->name,
             'category' => $request->category,
             'details' => $request->details,
+            'authors' => $request->authors,
+            'language' => $request->language,
             'price' => $request->price,
             'image' => $imagePath,
+
         ]);
 
         return redirect()->route('admin.products.index')->with('success', 'Product added successfully!');
@@ -61,6 +66,8 @@ class AdminProductController extends Controller
             'category' => 'required|string|max:20',
             'details' => 'required|string|max:500',
             'price' => 'required|numeric|min:0',
+            'authors' => 'required|string|max:500',
+            'language' => 'required|string|max:500',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -80,6 +87,8 @@ class AdminProductController extends Controller
             'name' => $request->name,
             'category' => $request->category,
             'details' => $request->details,
+            'authors' => $request->authors,
+            'language' => $request->language,
             'price' => $request->price,
             'image' => $product->image,
         ]);

@@ -26,7 +26,7 @@ class AuthController extends Controller
             if ($user->user_type === 'admin') {
                 return redirect()->route('admin.dashboard');
             } else {
-                // return redirect()->route('home');
+                return redirect()->route('user.home');
             }
         }
 

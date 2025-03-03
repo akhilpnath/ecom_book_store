@@ -9,7 +9,7 @@
                         <h5 class="mb-0">Add New Product</h5>
                         <div class="d-flex gap-2">
                             <a href="{{ route('admin.books.search') }}" class="btn btn-outline-primary ms-auto">
-                                <i class="fas fa-table"></i> External Add
+                            <i class="fas fa-globe"></i> External API Add
                             </a>
                         </div>
                     </div>

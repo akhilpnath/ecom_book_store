@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255)->nullable(); 
             $table->string('authors', 255)->nullable(); 
-            $table->string('category', 255)->nullable();
+            $table->string('category', 500)->nullable();
             $table->string('language', 50)->nullable(); 
             $table->text('details')->nullable(); 
             $table->integer('price')->nullable(); 
-            $table->string('image', 255)->nullable(); 
+            $table->string('image', 1000)->nullable(); 
             $table->timestamps();
         });
     }

@@ -1,9 +1,5 @@
 @extends('layouts.admin')
 
-@push('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts/dist/apexcharts.css">
-@endpush
-
 @section('content')
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -16,7 +12,7 @@
             ['title' => 'Total Pendings', 'value' => $totalPendings, 'color' => 'danger', 'icon' => 'clock', 'route' => 'admin.orders.index'],
             ['title' => 'Completed Orders', 'value' => $totalCompleted, 'color' => 'success', 'icon' => 'check-circle', 'route' => 'admin.orders.index'],
             ['title' => 'Orders Placed', 'value' => $totalOrders, 'color' => 'primary', 'icon' => 'shopping-cart', 'route' => 'admin.orders.index'],
-            ['title' => 'Products Added', 'value' => $totalProducts, 'color' => 'warning', 'icon' => 'box', 'route' => 'admin.products.index'],
+            ['title' => 'Total Products', 'value' => $totalProducts, 'color' => 'warning', 'icon' => 'box', 'route' => 'admin.products.index'],
             ['title' => 'Total Users', 'value' => $totalUsers, 'color' => 'info', 'icon' => 'users', 'route' => 'admin.users.index'],
             ['title' => 'Total Admins', 'value' => $totalAdmins, 'color' => 'dark', 'icon' => 'user-shield', 'route' => 'admin.users.index'],
             ['title' => 'Total Accounts', 'value' => $totalAccounts, 'color' => 'secondary', 'icon' => 'users-cog', 'route' => 'admin.users.index'],
@@ -66,7 +62,6 @@
 @endsection
 
 @push('scripts')
-
 <script>
     var ordersChart = new ApexCharts(document.querySelector("#ordersChart"), {
         chart: { 
@@ -83,10 +78,10 @@
         colors: ['#4f46e5'],
         series: [{ 
             name: "Orders",
-            data: [10, 50, 40, 70, 100, 90]
+            data: @json($ordersData)
         }],
         xaxis: {
-            categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+            categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
             labels: {
                 style: {
                     colors: '#6b7280'
@@ -118,7 +113,7 @@
         colors: ['#818cf8'],
         series: [{
             name: "Users",
-            data: [5, 15, 20, 25, 35, 45]
+            data: @json($usersData)
         }],
         plotOptions: {
             bar: {
@@ -126,7 +121,7 @@
             }
         },
         xaxis: {
-            categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+            categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
             labels: {
                 style: {
                     colors: '#6b7280'

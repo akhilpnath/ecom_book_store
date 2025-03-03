@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\AdminProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminUserController;
@@ -68,7 +68,7 @@ Route::middleware(['auth', 'user'])->group(function () {
 // Admin Routes
 Route::middleware(['auth', 'admin'])->group(function () {
     // Admin Dashboard
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     Route::get('/admin/profile', [AdminProfileController::class, 'edit'])->name('admin.profile.edit');
     Route::put('/admin/profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
@@ -80,7 +80,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/products/{product}/edit', [AdminProductController::class, 'edit'])->name('admin.products.edit');
     Route::put('/admin/products/{product}', [AdminProductController::class, 'update'])->name('admin.products.update');
     Route::delete('/admin/products/{product}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
-    
+
     // Orders Routes
     Route::get('/admin/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
     Route::put('/admin/orders/{order}', [AdminOrderController::class, 'update'])->name('admin.orders.update');

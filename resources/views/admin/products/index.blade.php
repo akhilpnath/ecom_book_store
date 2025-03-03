@@ -9,7 +9,7 @@
                         <h5 class="mb-0">Add New Product</h5>
                         <div class="d-flex gap-2">
                             <a href="{{ route('admin.books.search') }}" class="btn btn-outline-primary ms-auto">
-                            <i class="fas fa-globe"></i> External API Add
+                                <i class="fas fa-globe"></i> External API Add
                             </a>
                         </div>
                     </div>
@@ -36,10 +36,9 @@
                                         <label class="form-label">Category</label>
                                         <select name="category" class="form-select" required>
                                             <option value="" selected disabled>Select category</option>
-                                            <option value="Novel">Novel</option>
-                                            <option value="Programs">Programs</option>
-                                            <option value="Stories">Stories</option>
-                                            <option value="Poetry">Poetry</option>
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category }}">{{ $category }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>

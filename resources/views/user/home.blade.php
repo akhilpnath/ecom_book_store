@@ -14,32 +14,46 @@
     <section id="categories" class="py-5">
         <div class="container">
             <h2 class="text-center mb-5">Shop by Category</h2>
-            <div class="row g-4">
-                @php
-                    $categories = [
-                        ['name' => 'Programs', 'image' => 'Program.jpg', 'desc' => 'Python for Data Analysis, Learning PHP, Scala the Impatient, Eloquent JavaScript.'],
-                        ['name' => 'Stories', 'image' => 'stories.jpg', 'desc' => 'Dubliners, The Illustrated Man, The Things They Carried, Interpreter of Maladies.'],
-                        ['name' => 'Novel', 'image' => 'novel.jpeg', 'desc' => 'Animal Farm, Brave New World, The Catcher in the Rye, To Kill a Mockingbird.'],
-                        ['name' => 'Poetry', 'image' => 'poetry.jpg', 'desc' => 'Milk and Honey, Ariel, Selected Poems, The Sun and Her Flowers.']
-                    ];
-                @endphp
 
-                @foreach($categories as $category)
-                    <div class="col-md-6 col-lg-3">
-                        <div class="card category-card h-100">
-                            <img src="{{ asset('images/' . $category['image']) }}" class="card-img-top"
-                                alt="{{ $category['name'] }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $category['name'] }}</h5>
-                                <p class="card-text text-muted">{{ $category['desc'] }}</p>
-                                <a href="{{ route('user.category', $category['name']) }}" class="btn btn-outline-primary">
-                                    Browse {{ $category['name'] }}
-                                </a>
+            @if($categories->count())
+                <div class="category-slider">
+                    <div class="category-track">
+                        @foreach($categories as $category)
+                            <div class="category-item">
+                                <div class="card category-card h-100">
+                                    <img src="{{ Str::startsWith($category['image'], 'http') ? $category['image'] : asset('storage/' . $category['image']) }}"
+                                        class="card-img-top" alt="{{ $category['name'] }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ $category['name'] }}</h5>
+                                        <p class="card-text text-muted">{{ $category['desc'] }}</p>
+                                        <a href="{{ route('user.category', $category['name']) }}" class="btn btn-outline-primary">
+                                            Browse {{ $category['name'] }}
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        @endforeach
+                        <!-- Duplicate items for smooth looping -->
+                        @foreach($categories as $category)
+                            <div class="category-item">
+                                <div class="card category-card h-100">
+                                    <img src="{{ Str::startsWith($category['image'], 'http') ? $category['image'] : asset('storage/' . $category['image']) }}"
+                                        class="card-img-top" alt="{{ $category['name'] }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ $category['name'] }}</h5>
+                                        <p class="card-text text-muted">{{ $category['desc'] }}</p>
+                                        <a href="{{ route('user.category', $category['name']) }}" class="btn btn-outline-primary">
+                                            Browse {{ $category['name'] }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @else
+                <p class="text-center text-muted">No categories available.</p>
+            @endif
         </div>
     </section>
 
@@ -49,17 +63,21 @@
             <div class="row g-4">
                 @foreach($products as $product)
                     <div class="col-md-6 col-lg-3">
-                        <div class="card product-card h-100">
+                        <div class="card product-card h-100 d-flex flex-column">
                             <div class="position-relative">
-                                <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top"
-                                    alt="{{ $product->name }}">
+                                <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}"
+                                    class="card-img-top p-3" alt="{{ $product->name }}"
+                                    style="height: 200px; object-fit: contain;">
                                 <div class="position-absolute top-0 end-0 p-3">
                                     <span class="badge bg-primary">${{ number_format($product->price, 2) }}</span>
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $product->name }}</h5>
-                                <form action="{{ route('user.cart.add') }}" method="POST">
+                            <div class="card-body d-flex flex-column flex-grow-1">
+                                <h5 class="card-title text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" title="{{ $product->name }}">
+                                    {{ $product->name }}
+                                </h5>
+                                <form action="{{ route('user.cart.add') }}" method="POST" class="mt-auto">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                                     <div class="d-flex align-items-center gap-2 mb-3">
@@ -81,4 +99,14 @@
             </div>
         </div>
     </section>
+
 @endsection
+@push('script')
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            var tooltipList = [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el));
+        });
+    </script>
+
+@endpush

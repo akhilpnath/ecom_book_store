@@ -3,9 +3,8 @@
 @section('title', 'All Products - BookStore')
 
 @section('content')
-<div class="bg-light py-5">
+<div class="bg-light py-5 mt-4">
     <div class="container">
-        <!-- Page Header -->
         <div class="row mb-5">
             <div class="col-lg-8">
                 <h1 class="display-6 fw-bold mb-3">All Products</h1>
@@ -26,7 +25,6 @@
             </div>
         </div>
 
-        <!-- Filters Section -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
@@ -34,11 +32,10 @@
                         <div class="row align-items-center">
                             <div class="col-md-3">
                                 <select class="form-select">
-                                    <option selected>Category</option>
-                                    <option>Novel</option>
-                                    <option>Programs</option>
-                                    <option>Stories</option>
-                                    <option>Poetry</option>
+                                    <option value="" selected disabled>Select category</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category }}">{{ $category }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -68,15 +65,13 @@
             </div>
         </div>
 
-        <!-- Products Grid -->
         <div class="row g-4">
             @forelse($products as $product)
                 <div class="col-md-6 col-lg-4 col-xl-3">
                     <div class="card h-100 product-card">
-                        <!-- Product Image -->
                         <div class="position-relative">
-                            <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top p-3"
-                                alt="{{ $product->name }}">
+                            <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}"
+                                class="card-img-top p-3" alt="{{ $product->name }}">
                             <div class="position-absolute top-0 end-0 p-3">
                                 <span class="badge bg-primary fs-6">
                                     ${{ number_format($product->price, 2) }}
@@ -90,7 +85,6 @@
                             </div>
                         </div>
 
-                        <!-- Product Details -->
                         <div class="card-body">
                             <h5 class="card-title mb-3">{{ $product->name }}</h5>
 
@@ -134,7 +128,6 @@
             @endforelse
         </div>
 
-        <!-- Pagination -->
         <div class="row mt-5">
             <div class="col-12">
                 <nav aria-label="Page navigation">
@@ -170,7 +163,6 @@
         }
 
         function addToWishlist(productId) {
-            // Add your wishlist functionality here
             alert('Added to wishlist!');
         }
     </script>

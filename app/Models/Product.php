@@ -15,6 +15,8 @@ class Product extends Model
         'details',
         'price',
         'image',
+        'authors', 
+        'language',
     ];
 
     public function carts()

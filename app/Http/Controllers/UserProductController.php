@@ -10,7 +10,8 @@ class UserProductController extends Controller
     public function shop()
     {
         $products = Product::all();
-        return view('user.shop', compact('products'));
+        $categories=Product::pluck('category')->unique()->filter()->values();
+        return view('user.shop', compact('products','categories'));
     }
 
     public function category($category)

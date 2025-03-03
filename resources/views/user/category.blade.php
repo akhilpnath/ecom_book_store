@@ -26,8 +26,7 @@
                     <div class="col">
                         <div class="card h-100 shadow-sm product-card">
                             <div class="position-relative">
-                                <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top"
-                                    alt="{{ $product->name }}">
+                                <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}" style="padding-left: 3rem">
                                 <a href="{{ route('user.product.view', $product->id) }}"
                                     class="btn btn-light btn-sm position-absolute top-0 end-0 m-2">
                                     <i class="fas fa-eye"></i>

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BookController;
-use App\Http\Controllers\AdminProfileController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminProductController;
@@ -46,7 +46,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     // Cart
     Route::get('/cart', [UserCartController::class, 'index'])->name('user.cart');
     Route::post('/cart/add', [UserCartController::class, 'add'])->name('user.cart.add');
-    Route::post('/cart/update', [UserCartController::class, 'update'])->name('user.cart.update');
+    Route::put('/cart/update', [UserCartController::class, 'update'])->name('user.cart.update');
     Route::delete('/cart/delete/{id}', [UserCartController::class, 'delete'])->name('user.cart.delete');
     Route::delete('/cart/delete-all', [UserCartController::class, 'deleteAll'])->name('user.cart.deleteAll');
 
@@ -58,6 +58,7 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     // Orders
     Route::get('/orders', [UserOrderController::class, 'index'])->name('user.orders');
+    Route::get('/checkout', [UserOrderController::class, 'checkoutForm'])->name('user.checkout.form');
     Route::post('/checkout', [UserOrderController::class, 'checkout'])->name('user.checkout');
 
     // Messages
@@ -70,9 +71,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Admin Dashboard
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-    Route::get('/admin/profile', [AdminProfileController::class, 'edit'])->name('admin.profile.edit');
-    Route::put('/admin/profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
-
     // Products Routes
     Route::get('/admin/products', [AdminProductController::class, 'index'])->name('admin.products.index');
     Route::get('/admin/products/create', [AdminProductController::class, 'create'])->name('admin.products.create');
@@ -83,7 +81,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Orders Routes
     Route::get('/admin/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
-    Route::put('/admin/orders/{order}', [AdminOrderController::class, 'update'])->name('admin.orders.update');
+    Route::put('/admin/orders/{order}', [AdminOrderController::class, 'updatePaymentStatus'])->name('admin.orders.update');
     Route::delete('/admin/orders/{order}', [AdminOrderController::class, 'destroy'])->name('admin.orders.destroy');
 
     // Users Routes
@@ -92,7 +90,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Messages Routes
     Route::get('/admin/messages', [AdminMessageController::class, 'index'])->name('admin.messages.index');
+    Route::put('/admin/messages/{message}/read', [AdminMessageController::class, 'markRead'])->name('admin.messages.markRead');
     Route::delete('/admin/messages/{message}', [AdminMessageController::class, 'destroy'])->name('admin.messages.destroy');
+});
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 Route::prefix('admin')->group(function () {

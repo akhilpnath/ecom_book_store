@@ -3,11 +3,11 @@
         <a class="navbar-brand fw-bold" href="{{ route('user.home') }}">
             <i class="fas fa-book me-2"></i>BookStore
         </a>
-        
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-        
+
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
@@ -23,7 +23,7 @@
                     <a class="nav-link" href="{{ route('user.contact') }}">Contact</a>
                 </li>
             </ul>
-            
+
             <div class="d-flex align-items-center">
                 <a href="{{ route('user.wishlist') }}" class="wishlist-icon">
                     <i class="fas fa-heart"></i>
@@ -33,29 +33,32 @@
                     <i class="fas fa-shopping-cart"></i>
                     <span>{{ Auth::check() ? Auth::user()->cartItems->count() : 0 }}</span>
                 </a>
-                
+
                 @auth
                     <div class="dropdown ms-3">
-                        <button class="btn btn-link text-dark p-0" type="button" data-bs-toggle="dropdown">
-                            <img src="{{ asset('storage/' . Auth::user()->image) }}" 
-                                 alt="{{ Auth::user()->name }}"
-                                 class="rounded-circle"
-                                 width="40" height="40">
+                        <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button"
+                            id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="{{ Auth::user()->name }}"
+                                class="rounded-circle me-2" style="width: 35px; height: 35px; object-fit: cover;">
+                            <span>{{ Auth::user()->name }}</span>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-end user-profile-dropdown">
-                            <div class="px-3 py-2">
-                                <h6 class="mb-0">{{ Auth::user()->name }}</h6>
-                                <small class="text-muted">{{ Auth::user()->email }}</small>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-user me-2"></i>Profile
-                            </a>
-                            <a class="dropdown-item" href="{{ route('logout') }}">
-                                <i class="fas fa-sign-out-alt me-2"></i>Logout
-                            </a>
-                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                    <i class="fas fa-user-edit me-2"></i> Update Profile
+                                </a>
+                            </li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="m-0 p-0">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
                     </div>
+
                 @else
                     <a href="{{ route('login') }}" class="btn btn-outline-primary ms-3">Login</a>
                 @endauth

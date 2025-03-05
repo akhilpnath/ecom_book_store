@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email', 100);
             $table->string('number', 12);
             $table->string('message', 500);
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
     }

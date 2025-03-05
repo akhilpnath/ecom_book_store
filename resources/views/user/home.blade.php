@@ -1,19 +1,26 @@
 @extends('layouts.user')
 
 @section('content')
-    <div class="hero-section text-center">
+    <div class="home-section text-left">
         <div class="container">
-            <h1 class="display-4 fw-bold mb-4">Discover Your Next Great Read</h1>
-            <p class="lead mb-4">Explore thousands of books at your fingertips</p>
-            <a href="#categories" class="btn btn-primary btn-lg px-5">
-                Start Exploring
-            </a>
+            <div class="row">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4" style="color: black;">Discover Your Next Great Read</h1>
+                    <p class="lead mb-4" style="color: black;">Explore thousands of books at your fingertips</p>
+                    <a href="#categories" class="btn btn-primary btn-lg px-5">
+                        Start Exploring
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
     <section id="categories" class="py-5">
         <div class="container">
-            <h2 class="text-center mb-5">Shop by Category</h2>
+            <h2 class="text-center mb-5 fw-bold home-page-section-text">
+                Shop by Category
+                <span style="display: block; width: 100px; height: 4px; background: #0d6efd; margin: 8px auto 0;"></span>
+            </h2>
 
             @if($categories->count())
                 <div class="category-slider">
@@ -59,7 +66,10 @@
 
     <section class="py-5 bg-light">
         <div class="container">
-            <h2 class="text-center mb-5">Latest Products</h2>
+            <h2 class="text-center mb-5 fw-bold home-page-section-text">
+                Latest Products
+                <span style="display: block; width: 100px; height: 4px; background: #0d6efd; margin: 8px auto 0;"></span>
+            </h2>
             <div class="row g-4">
                 @foreach($products as $product)
                     <div class="col-md-6 col-lg-3">
@@ -87,6 +97,10 @@
                                             class="btn btn-outline-secondary">
                                             <i class="fas fa-eye"></i>
                                         </a>
+                                        <button type="button" class="btn btn-outline-danger btn-sm add-to-wishlist-home"
+                                            data-id="{{ $product->id }}">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
                                     </div>
                                     <button type="submit" class="btn btn-primary w-100" name="add_to_cart">
                                         Add to Cart
@@ -101,12 +115,33 @@
     </section>
 
 @endsection
-@push('script')
+@push('scripts')
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-            var tooltipList = [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el));
+        $(document).ready(function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $(".add-to-wishlist-home").click(function () {
+                let productId = $(this).data("id");
+
+                $.ajax({
+                    url: "{{ route('user.wishlist.add') }}",
+                    type: "POST",
+                    data: { product_id: productId },
+                    success: function (response) {
+                        alert("✅ " + response.success);
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 409) {
+                            alert("❌ Product already in wishlist!");
+                        } else {
+                            alert("❌ Error adding to wishlist. Try again!");
+                        }
+                    }
+                });
+            });
         });
     </script>
-
 @endpush

@@ -15,6 +15,7 @@ class Message extends Model
         'email',
         'number',
         'message',
+        'is_read'
     ];
 
     protected $table='message';

@@ -17,7 +17,7 @@ class UserWishlistController extends Controller
         $grandTotal = $cartItems->sum(function ($item) {
             return $item->price * $item->quantity;
         });
-        return view('user.wishlist', compact('wishlistItems','grandTotal'));
+        return view('user.wishlist', compact('wishlistItems', 'grandTotal'));
     }
 
     public function add(Request $request)
@@ -28,16 +28,14 @@ class UserWishlistController extends Controller
 
         $product = Product::findOrFail($request->product_id);
 
-        // Check if product already exists in wishlist
         $wishlistItem = Wishlist::where('user_id', Auth::id())
             ->where('product_id', $request->product_id)
             ->first();
 
         if ($wishlistItem) {
-            return redirect()->back()->with('error', 'Product already in wishlist!');
+            return response()->json(['error' => 'Product already in wishlist!'], 409);
         }
 
-        // Add to wishlist
         Wishlist::create([
             'user_id' => Auth::id(),
             'product_id' => $request->product_id,
@@ -46,8 +44,9 @@ class UserWishlistController extends Controller
             'image' => $product->image,
         ]);
 
-        return redirect()->back()->with('success', 'Product added to wishlist!');
+        return response()->json(['success' => 'Product added to wishlist!']);
     }
+
 
     public function delete($id)
     {

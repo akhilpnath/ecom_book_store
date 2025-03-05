@@ -22,18 +22,28 @@
                 <button class="d-md-none" id="menu-btn">
                     <i class="fas fa-bars"></i>
                 </button>
-                <button class="notification-badge">
-                    <i class="fas fa-bell"></i>
-                </button>
+                <a href="{{ route('admin.messages.index') }}"
+                    class="notification-badge btn btn-light position-relative">
+                    <i
+                        class="fas fa-bell {{ \App\Models\Message::where('is_read', false)->count() > 0 ? 'text-danger' : '' }}"></i>
+                    @php $unreadCount = \App\Models\Message::where('is_read', false)->count(); @endphp
+                    @if($unreadCount > 0)
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ $unreadCount }}
+                        </span>
+                    @endif
+                </a>
             </div>
             <div class="dropdown">
-                <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="{{ Auth::user()->name }}" class="rounded-circle me-2" style="width: 35px; height: 35px; object-fit: cover;">
+                <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button"
+                    id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="{{ Auth::user()->name }}"
+                        class="rounded-circle me-2" style="width: 35px; height: 35px; object-fit: cover;">
                     <span>{{ Auth::user()->name }}</span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                     <li>
-                        <a class="dropdown-item" href="{{ route('admin.profile.edit') }}">
+                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
                             <i class="fas fa-user-edit me-2"></i> Update Profile
                         </a>
                     </li>
@@ -56,31 +66,36 @@
                 <div class="position-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                            <a class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}"
+                                href="{{ route('admin.dashboard') }}">
                                 <i class="fas fa-home"></i>
                                 Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ Request::is('admin/products*') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
+                            <a class="nav-link {{ Request::is('admin/products*') ? 'active' : '' }}"
+                                href="{{ route('admin.products.index') }}">
                                 <i class="fas fa-box"></i>
                                 Products
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ Request::is('admin/orders*') ? 'active' : '' }}" href="{{ route('admin.orders.index') }}">
+                            <a class="nav-link {{ Request::is('admin/orders*') ? 'active' : '' }}"
+                                href="{{ route('admin.orders.index') }}">
                                 <i class="fas fa-shopping-cart"></i>
                                 Orders
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ Request::is('admin/users*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                            <a class="nav-link {{ Request::is('admin/users*') ? 'active' : '' }}"
+                                href="{{ route('admin.users.index') }}">
                                 <i class="fas fa-users"></i>
                                 Users
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ Request::is('admin/messages*') ? 'active' : '' }}" href="{{ route('admin.messages.index') }}">
+                            <a class="nav-link {{ Request::is('admin/messages*') ? 'active' : '' }}"
+                                href="{{ route('admin.messages.index') }}">
                                 <i class="fas fa-envelope"></i>
                                 Messages
                             </a>
@@ -107,12 +122,12 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        $(document).ready(function() {
-            $("#menu-btn").on("click", function() {
+        $(document).ready(function () {
+            $("#menu-btn").on("click", function () {
                 $(".sidebar").toggleClass("show");
             });
 
-            $(document).on("click", function(event) {
+            $(document).on("click", function (event) {
                 if (!$(event.target).closest(".sidebar, #menu-btn").length) {
                     $(".sidebar").removeClass("show");
                 }
@@ -123,7 +138,7 @@
                 return new bootstrap.Dropdown(dropdownToggleEl);
             });
 
-            $(document).on("click", function(event) {
+            $(document).on("click", function (event) {
                 if (!$(event.target).closest(".dropdown").length) {
                     $(".dropdown-menu").removeClass("show");
                 }

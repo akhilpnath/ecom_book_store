@@ -16,12 +16,15 @@
                 </nav>
             </div>
             <div class="col-lg-4">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search products...">
-                    <button class="btn btn-primary">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
+                <form action="{{ route('user.shop') }}" method="GET" id="searchForm">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" placeholder="Search products..."
+                            value="{{ request('search') }}">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -29,37 +32,57 @@
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-3">
-                                <select class="form-select">
-                                    <option value="" selected disabled>Select category</option>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category }}">{{ $category }}</option>
-                                    @endforeach
-                                </select>
+                        <form action="{{ route('user.shop') }}" method="GET" id="filterForm">
+                            @if(request()->has('search'))
+                                <input type="hidden" name="search" value="{{ request('search') }}">
+                            @endif
+
+                            <div class="row align-items-center">
+                                <div class="col-md-3">
+                                    <select class="form-select filter-select" name="category">
+                                        <option value="">Select category</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category }}" {{ request('category') == $category ? 'selected' : '' }}>
+                                                {{ $category }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select filter-select" name="sort_by">
+                                        <option value="">Sort By</option>
+                                        <option value="Price: Low to High" {{ request('sort_by') == 'Price: Low to High' ? 'selected' : '' }}>
+                                            Price: Low to High
+                                        </option>
+                                        <option value="Price: High to Low" {{ request('sort_by') == 'Price: High to Low' ? 'selected' : '' }}>
+                                            Price: High to Low
+                                        </option>
+                                        <option value="Newest First" {{ request('sort_by') == 'Newest First' ? 'selected' : '' }}>
+                                            Newest First
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select filter-select" name="price_range">
+                                        <option value="">Price Range</option>
+                                        <option value="Under $25" {{ request('price_range') == 'Under $25' ? 'selected' : '' }}>
+                                            Under $25
+                                        </option>
+                                        <option value="$25 - $50" {{ request('price_range') == '$25 - $50' ? 'selected' : '' }}>
+                                            $25 - $50
+                                        </option>
+                                        <option value="Over $50" {{ request('price_range') == 'Over $50' ? 'selected' : '' }}>
+                                            Over $50
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-outline-secondary w-100">
+                                        <i class="fas fa-filter me-2"></i>Apply Filters
+                                    </button>
+                                </div>
                             </div>
-                            <div class="col-md-3">
-                                <select class="form-select">
-                                    <option selected>Sort By</option>
-                                    <option>Price: Low to High</option>
-                                    <option>Price: High to Low</option>
-                                    <option>Newest First</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select">
-                                    <option selected>Price Range</option>
-                                    <option>Under $25</option>
-                                    <option>$25 - $50</option>
-                                    <option>Over $50</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <button class="btn btn-outline-secondary w-100">
-                                    <i class="fas fa-filter me-2"></i>Apply Filters
-                                </button>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -68,15 +91,18 @@
         <div class="row g-4">
             @forelse($products as $product)
                 <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card h-100 product-card">
+                    <div class="card h-100 product-card d-flex flex-column">
                         <div class="position-relative">
                             <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}"
-                                class="card-img-top p-3" alt="{{ $product->name }}">
+                                class="card-img-top p-3" alt="{{ $product->name }}"
+                                style="height: 200px; object-fit: contain;">
+
                             <div class="position-absolute top-0 end-0 p-3">
                                 <span class="badge bg-primary fs-6">
                                     ${{ number_format($product->price, 2) }}
                                 </span>
                             </div>
+
                             <div class="position-absolute top-0 start-0 p-3">
                                 <a href="{{ route('user.product.view', $product->id) }}"
                                     class="btn btn-light rounded-circle shadow-sm" title="Quick View">
@@ -85,29 +111,30 @@
                             </div>
                         </div>
 
-                        <div class="card-body">
-                            <h5 class="card-title mb-3">{{ $product->name }}</h5>
+                        <div class="card-body d-flex flex-column flex-grow-1">
+                            <h5 class="card-title mb-3 text-truncate" style="max-width: 100%;" data-bs-toggle="tooltip"
+                                title="{{ $product->name }}">
+                                {{ $product->name }}
+                            </h5>
 
-                            <form action="{{ route('user.cart.add') }}" method="POST">
+                            <form action="{{ route('user.cart.add') }}" method="POST" class="mt-auto">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
 
                                 <div class="d-flex gap-2 align-items-center mb-3">
-                                    <div class="input-group" style="width: 120px;">
-                                        <button type="button" class="btn btn-outline-secondary btn-sm"
-                                            onclick="decrementQty(this)">
+                                    <div class="input-group quantity-container" style="width: 120px;">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm decrement-qty">
                                             <i class="fas fa-minus"></i>
                                         </button>
                                         <input type="number" name="p_qty" value="1" min="1"
-                                            class="form-control form-control-sm text-center">
-                                        <button type="button" class="btn btn-outline-secondary btn-sm"
-                                            onclick="incrementQty(this)">
+                                            class="form-control form-control-sm text-center quantity-input">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm increment-qty">
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </div>
 
-                                    <button type="button" class="btn btn-outline-danger btn-sm"
-                                        onclick="addToWishlist({{ $product->id }})">
+                                    <button type="button" class="btn btn-outline-danger btn-sm add-to-wishlist"
+                                        data-id="{{ $product->id }}">
                                         <i class="fas fa-heart"></i>
                                     </button>
                                 </div>
@@ -121,7 +148,7 @@
                 </div>
             @empty
                 <div class="col-12 text-center py-5">
-                    <i class="fas fa-books fa-3x mb-3 text-muted"></i>
+                    <i class="fas fa-box-open fa-3x mb-3 text-muted"></i>
                     <h4>No Products Found</h4>
                     <p class="text-muted">Try adjusting your search or filter criteria</p>
                 </div>
@@ -130,19 +157,7 @@
 
         <div class="row mt-5">
             <div class="col-12">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1">Previous</a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+                {{ $products->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>
@@ -150,20 +165,53 @@
 
 @push('scripts')
     <script>
-        function incrementQty(button) {
-            const input = button.previousElementSibling;
-            input.value = parseInt(input.value) + 1;
-        }
+        $(document).ready(function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $(".add-to-wishlist").click(function () {
+                let productId = $(this).data("id");
 
-        function decrementQty(button) {
-            const input = button.nextElementSibling;
-            if (parseInt(input.value) > 1) {
-                input.value = parseInt(input.value) - 1;
-            }
-        }
+                $.ajax({
+                    url: "{{ route('user.wishlist.add') }}",
+                    type: "POST",
+                    data: { product_id: productId },
+                    success: function (response) {
+                        alert("✅ " + response.success);
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 409) {
+                            alert("❌ Product already in wishlist!");
+                        } else {
+                            alert("❌ Error adding to wishlist. Try again!");
+                        }
+                    }
+                });
+            });
 
-        function addToWishlist(productId) {
-            alert('Added to wishlist!');
-        }
+            $(".increment-qty").click(function () {
+                console.log("Increment button clicked!");
+                let input = $(this).closest(".quantity-container").find(".quantity-input");
+                input.val(parseInt(input.val()) + 1).trigger("change");
+            });
+
+            $(".decrement-qty").click(function () {
+                console.log("Decrement button clicked!");
+                let input = $(this).closest(".quantity-container").find(".quantity-input");
+                if (parseInt(input.val()) > 1) {
+                    input.val(parseInt(input.val()) - 1).trigger("change");
+                }
+            });
+
+            $(".filter-select").change(function () {
+                console.log("Filter select changed!");
+                $("#filterForm").submit();
+            });
+
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
     </script>
+
 @endpush

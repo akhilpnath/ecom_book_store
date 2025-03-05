@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -9,8 +8,16 @@ class AdminMessageController extends Controller
 {
     public function index()
     {
-        $messages = Message::all();
+        $messages = Message::orderBy('is_read')->latest()->paginate(10);
         return view('admin.messages.index', compact('messages'));
+    }
+
+    public function markRead(Message $message)
+    {
+        if (!$message->is_read) {
+            $message->update(['is_read' => true]);
+        }
+        return redirect()->route('admin.messages.index')->with('success', 'Message marked as read.');
     }
 
     public function destroy(Message $message)

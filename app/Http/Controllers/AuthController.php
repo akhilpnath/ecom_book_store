@@ -21,7 +21,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password],true)) {
             $user = Auth::user();
             if ($user->user_type === 'admin') {
                 return redirect()->route('admin.dashboard');
@@ -29,7 +29,6 @@ class AuthController extends Controller
                 return redirect()->route('user.home');
             }
         }
-
 
         return back()->withErrors(['email' => 'Invalid credentials']);
     }

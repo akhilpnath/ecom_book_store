@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Cart;
+use App\Models\Address;
 use Illuminate\Support\Facades\Auth;
 
 class UserOrderController extends Controller
 {
-   
+
     public function index()
     {
         $orders = Order::where('user_id', Auth::id())->latest()->paginate(10);
@@ -29,25 +30,52 @@ class UserOrderController extends Controller
             return $item->price * $item->quantity;
         });
 
-        return view('user.checkout', compact('cartItems', 'grandTotal'));
+        $addresses = Address::where('user_id', Auth::id())->latest()->get();
+
+        // If user has no saved addresses, redirect to create address
+        if ($addresses->isEmpty()) {
+            return redirect()->route('user.address.create')->with('info', 'Please add a shipping address before proceeding to checkout.');
+        }
+
+        return view('user.checkout', compact('cartItems', 'grandTotal', 'addresses'));
     }
 
     public function checkout(Request $request)
     {
-        // Ensure the user has items in the cart before checkout
         $cartItems = Cart::where('user_id', Auth::id())->get();
 
         if ($cartItems->isEmpty()) {
             return redirect()->route('user.cart')->with('error', 'Your cart is empty. Add items before checking out.');
         }
 
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:100',
             'number' => 'required|string|max:12',
             'email' => 'required|email',
             'method' => 'required|string',
-            'address' => 'required|string',
         ]);
+
+        // Handle address validation based on user choice
+        if ($request->has('use_manual_address') && $request->use_manual_address) {
+            $request->validate([
+                'address' => 'required|string|min:5',
+            ]);
+            $shippingAddress = $request->address;
+        } else {
+            $request->validate([
+                'address_id' => 'required|exists:address,id',
+            ]);
+
+            // Get the address from database
+            $address = Address::where('id', $request->address_id)
+                ->where('user_id', Auth::id())
+                ->firstOrFail();
+
+            // Format the address as a string
+            $shippingAddress = "{$address->address_line_1}, " .
+                ($address->address_line_2 ? "{$address->address_line_2}, " : "") .
+                "{$address->city}, {$address->state}, {$address->country} - {$address->pincode}";
+        }
 
         $totalPrice = $cartItems->sum(function ($item) {
             return $item->price * $item->quantity;
@@ -59,7 +87,7 @@ class UserOrderController extends Controller
             'number' => $request->number,
             'email' => $request->email,
             'method' => $request->method,
-            'address' => $request->address,
+            'address' => $shippingAddress,
             'total_products' => $cartItems->pluck('name')->implode(', '),
             'total_price' => $totalPrice,
             'placed_on' => now(),

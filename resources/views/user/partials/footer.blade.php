@@ -15,8 +15,8 @@
                 <ul class="list-unstyled">
                     <li><a href="{{ route('user.cart') }}">Cart</a></li>
                     <li><a href="{{ route('user.wishlist') }}">Wishlist</a></li>
-                    <li><a href="{{ route('login') }}">Login</a></li>
-                    <li><a href="{{ route('register') }}">Register</a></li>
+                    <li><a href="{{ route('user.address.index') }}">Address</a></li>
+                    <li><a href="{{ route('profile.edit') }}">Profile</a></li>
                 </ul>
             </div>
             <div class="col-lg-3 col-md-6">

@@ -76,5 +76,8 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
+    public function Address(){
+        return $this->hasone(Address::class,'user_id','id');
+    }
 
 }

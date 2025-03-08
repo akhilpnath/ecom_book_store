@@ -37,12 +37,48 @@
                             @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Shipping Address</label>
-                            <textarea name="address" id="address" class="form-control @error('address') is-invalid @enderror" rows="3">{{ old('address') }}</textarea>
-                            @error('address')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="mb-4">
+                            <h5>Shipping Address</h5>
+                            
+                            @if($addresses->count() > 0)
+                                <div class="mb-3">
+                                    <select name="address_id" id="address_id" class="form-select @error('address_id') is-invalid @enderror">
+                                        <option value="">Select an address</option>
+                                        @foreach($addresses as $address)
+                                            <option value="{{ $address->id }}" {{ old('address_id') == $address->id ? 'selected' : '' }}>
+                                                {{ $address->address_line_1 }}, {{ $address->city }}, {{ $address->state }}, {{ $address->country }} - {{ $address->pincode }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('address_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <a href="{{ route('user.address.create') }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-plus"></i> Add New Address
+                                        </a>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="use_manual_address" name="use_manual_address">
+                                        <label class="form-check-label" for="use_manual_address">
+                                            Enter different address
+                                        </label>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <div id="manual_address_fields" class="{{ $addresses->count() > 0 ? 'd-none' : '' }}">
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Shipping Address</label>
+                                    <textarea name="address" id="address" class="form-control @error('address') is-invalid @enderror" rows="3">{{ old('address') }}</textarea>
+                                    @error('address')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -90,6 +126,18 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
+        
+        $("#use_manual_address").change(function() {
+            if($(this).is(":checked")) {
+                $("#manual_address_fields").removeClass("d-none");
+                $("#address_id").prop("disabled", true);
+            } else {
+                $("#manual_address_fields").addClass("d-none");
+                $("#address_id").prop("disabled", false);
+            }
+        });
+        
+        // Form validation
         $("#checkoutForm").validate({
             errorClass: "is-invalid",
             validClass: "is-valid",
@@ -114,8 +162,15 @@
                     maxlength: 15
                 },
                 address: {
-                    required: true,
+                    required: function() {
+                        return $("#use_manual_address").is(":checked") || $("select[name='address_id']").length === 0;
+                    },
                     minlength: 5
+                },
+                address_id: {
+                    required: function() {
+                        return !$("#use_manual_address").is(":checked") && $("select[name='address_id']").length > 0;
+                    }
                 },
                 method: {
                     required: true
@@ -139,6 +194,9 @@
                 address: {
                     required: "Please enter your shipping address",
                     minlength: "Address must be at least 5 characters"
+                },
+                address_id: {
+                    required: "Please select an address or enter a new one"
                 },
                 method: {
                     required: "Please select a payment method"

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserAddressController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminProductController;
@@ -64,6 +65,13 @@ Route::middleware(['auth', 'user'])->group(function () {
     // Messages
     Route::get('/contact', [UserMessageController::class, 'index'])->name('user.contact');
     Route::post('/contact/send', [UserMessageController::class, 'send'])->name('user.contact.send');
+
+    // Address 
+    Route::get('/address/index', [UserAddressController::class, 'viewAddress'])->name('user.address.index');
+    Route::get('/address/create', [UserAddressController::class, 'createAddress'])->name('user.address.create');
+    Route::post('/address/store', [UserAddressController::class, 'updateOrCreateAddress'])->name('user.address.store');
+    Route::get('/address/edit/{address}', [UserAddressController::class, 'editAddress'])->name('user.address.edit');
+    Route::delete('/address/delete/{address}', [UserAddressController::class, 'delete'])->name('user.address.delete');
 });
 
 // Admin Routes

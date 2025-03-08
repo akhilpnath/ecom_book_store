@@ -49,6 +49,11 @@
                                 </a>
                             </li>
                             <li>
+                                <a class="dropdown-item" href="{{ route('user.address.index') }}">
+                                    <i class="fa fa-address-card me-2"></i> User Address
+                                </a>
+                            </li>
+                            <li>
                                 <form action="{{ route('logout') }}" method="POST" class="m-0 p-0">
                                     @csrf
                                     <button type="submit" class="dropdown-item text-danger">

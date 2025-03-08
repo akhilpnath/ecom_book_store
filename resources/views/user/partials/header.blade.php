@@ -61,6 +61,15 @@
                                     </button>
                                 </form>
                             </li>
+                            <li>
+                                <form action="{{ route('users.destroy',Auth::id()) }}" method="POST" class="m-0 p-0">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="dropdown-item text-danger" onclick="return confirm('are you sure want to delete your account?')">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Account delete
+                                    </button>
+                                </form>
+                            </li>
                         </ul>
                     </div>
 

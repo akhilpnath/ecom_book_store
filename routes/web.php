@@ -72,6 +72,8 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/address/store', [UserAddressController::class, 'updateOrCreateAddress'])->name('user.address.store');
     Route::get('/address/edit/{address}', [UserAddressController::class, 'editAddress'])->name('user.address.edit');
     Route::delete('/address/delete/{address}', [UserAddressController::class, 'delete'])->name('user.address.delete');
+    // user account delete
+    Route::delete('/users/{user}', [UserController::class, 'destroyUserAccount'])->name('users.destroy');
 });
 
 // Admin Routes

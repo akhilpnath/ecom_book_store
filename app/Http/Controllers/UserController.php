@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -28,6 +30,11 @@ class UserController extends Controller
 
         return view('user.home', compact('products', 'categories'));
     }
-
+    public function destroyUserAccount(User $user)
+    {
+        $user->delete();
+        Auth::logout();
+        return redirect()->route('login')->with('success', "{$user->name} your account deleted successfully!");
+    }
 
 }

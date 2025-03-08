@@ -19,8 +19,9 @@
                             {{ ucfirst($user->user_type) }}
                         </span>
                     </p>
+                    <p class="mb-1">User Created:</p><span>{{date_format($user->created_at,'Y-M-d h:i')  }}</span>
 
-                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="mt-2">
+                    <form action="{{ route('admin.users.destroy',$user->id) }}" method="POST" class="m-0 p-0">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Are you sure you want to delete this user?')">

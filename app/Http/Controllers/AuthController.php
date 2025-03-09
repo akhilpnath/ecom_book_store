@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewUserCreated;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -21,7 +23,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password],true)) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], true)) {
             $user = Auth::user();
             if ($user->user_type === 'admin') {
                 return redirect()->route('admin.dashboard');
@@ -49,7 +51,7 @@ class AuthController extends Controller
 
         $imagePath = $request->file('image')->storeAs('images/user_image', time() . '.' . $request->file('image')->getClientOriginalExtension(), 'public');
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -57,7 +59,18 @@ class AuthController extends Controller
             'user_type' => 'user',
         ]);
 
-        return redirect()->route('login')->with('success', 'Registration successful!');
+        // Mail::to($user->email)->cc('admin@gmail.com')->bcc('admin@gmail.com')->send(new NewUserCreated($user));
+
+        // Send email to the user
+        Mail::to($user->email)
+            ->send(new NewUserCreated($user, false));
+
+        // Send separate email to admin with all details
+        Mail::to('admin@gmail.com')
+            ->send(new NewUserCreated($user, true));
+
+        return redirect()->route('user.home')->with('success', 'Registration successful!');
+
     }
 
     public function logout()

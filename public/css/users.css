@@ -161,6 +161,11 @@ footer a:hover {
     text-transform: uppercase;
     position: relative;
 }
+.category-track {
+    display: flex;
+    animation: scroll 100s linear infinite;
+}
+
 @keyframes scroll {
     0% {
         transform: translateX(0);

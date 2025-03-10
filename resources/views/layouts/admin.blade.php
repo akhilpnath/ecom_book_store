@@ -22,17 +22,18 @@
                 <button class="d-md-none" id="menu-btn">
                     <i class="fas fa-bars"></i>
                 </button>
+                @php $unreadCount = \App\Models\Message::where('is_read', false)->count(); @endphp
                 <a href="{{ route('admin.messages.index') }}"
                     class="notification-badge btn btn-light position-relative">
-                    <i
-                        class="fas fa-bell {{ \App\Models\Message::where('is_read', false)->count() > 0 ? 'text-danger' : '' }}"></i>
-                    @php $unreadCount = \App\Models\Message::where('is_read', false)->count(); @endphp
+                    <i class="fas fa-bell {{ $unreadCount > 0 ? 'text-danger' : '' }}"></i>
+
                     @if($unreadCount > 0)
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{ $unreadCount }}
                         </span>
                     @endif
                 </a>
+
             </div>
             <div class="dropdown">
                 <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button"

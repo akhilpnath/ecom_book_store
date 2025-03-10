@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory,Cachable;
 
     protected $fillable = [
         'name',
@@ -27,5 +29,30 @@ class Product extends Model
     public function wishlists()
     {
         return $this->hasMany(Wishlist::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function () {
+            // Cache::tags(['products'])->flush();
+            cache()->forget('categories_list');
+        });
+
+        static::updated(function(){
+            // Cache::tags(['products'])->flush();
+            cache()->forget('categories_list');
+        });
+        static::deleted(function(){
+          // Cache::tags(['products'])->flush();
+          cache()->forget('categories_list');
+        });
+        static::saved(function(){
+            // Cache::tags(['products'])->flush();
+            cache()->forget('categories_list');
+        });
+        
+
     }
 }

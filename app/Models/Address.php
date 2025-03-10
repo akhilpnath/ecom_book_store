@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Address extends Model
 {
-    use HasFactory;
+    use HasFactory,Cachable;
     
     protected $primaryKey = 'id';
     protected $table = 'address';

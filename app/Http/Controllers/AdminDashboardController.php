@@ -13,19 +13,35 @@ class AdminDashboardController extends Controller
 {
     public function index()
     {
-        // Existing data
-        $totalPendings = Order::where('payment_status', 'pending')->sum('total_price');
-        $totalCompleted = Order::where('payment_status', 'completed')->sum('total_price');
-        $totalOrders = Order::count();
+        // Load necessary user counts in a single query
+        $userCounts = User::selectRaw("
+        COUNT(*) as totalAccounts, 
+        SUM(CASE WHEN status = '0' THEN 1 ELSE 0 END) as inactiveUsers, 
+        SUM(CASE WHEN user_type = 'admin' THEN 1 ELSE 0 END) as totalAdmins
+    ")->first();
+
+        // Load order statistics in a single query
+        $orderStats = Order::selectRaw("
+    SUM(CASE WHEN payment_status = 'pending' THEN total_price ELSE 0 END) as totalPendings, 
+    SUM(CASE WHEN payment_status = 'completed' THEN total_price ELSE 0 END) as totalCompleted,
+    COUNT(*) as totalOrders,
+    COUNT(CASE WHEN payment_status = 'pending' THEN 1 END) as totalPendingOrders,
+    COUNT(CASE WHEN payment_status = 'completed' THEN 1 END) as totalCompletedOrders
+")->first();
+
+
         $totalProducts = Product::count();
-        $inactiveUsers = User::where('status', '0')->count();
-        $totalAdmins = User::where('user_type', 'admin')->count();
-        $totalAccounts = User::count();
         $totalMessages = Message::count();
-
         $ordersData = $this->getOrdersData();
-
         $usersData = $this->getUsersData();
+
+        // Extract values from the objects into individual variables
+        $totalPendings = $orderStats->totalPendings ?? 0;
+        $totalCompleted = $orderStats->totalCompleted ?? 0;
+        $totalOrders = $orderStats->totalOrders ?? 0;
+        $inactiveUsers = $userCounts->inactiveUsers ?? 0;
+        $totalAdmins = $userCounts->totalAdmins ?? 0;
+        $totalAccounts = $userCounts->totalAccounts ?? 0;
 
         return view('admin.dashboard', compact(
             'totalPendings',
@@ -47,15 +63,10 @@ class AdminDashboardController extends Controller
             ->whereYear('created_at', Carbon::now()->year)
             ->groupBy('month')
             ->orderBy('month')
-            ->get();
+            ->pluck('count', 'month')
+            ->toArray();
 
-        $ordersData = array_fill(0, 12, 0); // Initialize array with 12 months
-
-        foreach ($orders as $order) {
-            $ordersData[$order->month - 1] = $order->count; // Subtract 1 to match array index
-        }
-
-        return $ordersData;
+        return array_replace(array_fill(0, 12, 0), $orders); // Ensure all months are filled
     }
 
     private function getUsersData()
@@ -64,14 +75,9 @@ class AdminDashboardController extends Controller
             ->whereYear('created_at', Carbon::now()->year)
             ->groupBy('month')
             ->orderBy('month')
-            ->get();
+            ->pluck('count', 'month')
+            ->toArray();
 
-        $usersData = array_fill(0, 12, 0); // Initialize array with 12 months
-
-        foreach ($users as $user) {
-            $usersData[$user->month - 1] = $user->count; // Subtract 1 to match array index
-        }
-
-        return $usersData;
+        return array_replace(array_fill(0, 12, 0), $users); // Ensure all months are filled
     }
 }

@@ -96,6 +96,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Users Routes
     Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::post('/admin/users', [AdminUserController::class, 'updateOrCreateUsers'])->name('admin.users.updateOrCreateUsers');
+    Route::post('/admin/users/{user}/toggle-status', [AdminUserController::class, 'updateUserActiveStatus'])->name('admin.users.updateUserStatus');
     Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
 
     // Messages Routes

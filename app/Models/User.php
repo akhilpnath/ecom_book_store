@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -77,8 +77,16 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
-    public function Address(){
-        return $this->hasone(Address::class,'user_id','id');
+    public function Address()
+    {
+        return $this->hasone(Address::class, 'user_id', 'id');
     }
+
+    public function getActiveStatusAttribute()
+    {
+        return $this->status == '0' ? 'Inactive' : 'Active';
+    }
+
+    protected $appends = ['active_status'];
 
 }

@@ -18,7 +18,7 @@ class AdminDashboardController extends Controller
         $totalCompleted = Order::where('payment_status', 'completed')->sum('total_price');
         $totalOrders = Order::count();
         $totalProducts = Product::count();
-        $totalUsers = User::where('user_type', 'user')->count();
+        $inactiveUsers = User::where('status', '0')->count();
         $totalAdmins = User::where('user_type', 'admin')->count();
         $totalAccounts = User::count();
         $totalMessages = Message::count();
@@ -32,7 +32,7 @@ class AdminDashboardController extends Controller
             'totalCompleted',
             'totalOrders',
             'totalProducts',
-            'totalUsers',
+            'inactiveUsers',
             'totalAdmins',
             'totalAccounts',
             'totalMessages',

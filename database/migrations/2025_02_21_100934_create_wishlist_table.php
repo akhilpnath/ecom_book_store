@@ -19,6 +19,9 @@ return new class extends Migration
             $table->integer('price');
             $table->string('image', 1000);
             $table->timestamps();
+            $table->index('user_id'); // Foreign key indexing
+            $table->index('product_id'); // Foreign key indexing
+            $table->index(['user_id', 'product_id']); // Composite index for quick lookup
         });
     }
 

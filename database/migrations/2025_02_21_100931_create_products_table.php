@@ -21,6 +21,9 @@ return new class extends Migration
             $table->integer('price')->nullable(); 
             $table->string('image', 1000)->nullable(); 
             $table->timestamps();
+            $table->index('category'); // Searching products by category
+            $table->index('language'); // If filtering products by language
+            $table->index('price'); // Sorting products by price
         });
     }
 

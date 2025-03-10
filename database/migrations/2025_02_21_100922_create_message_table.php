@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('message', 500);
             $table->boolean('is_read')->default(false);
             $table->timestamps();
+            $table->index('user_id'); // Foreign key indexing
+            $table->index('email'); // Commonly searched field
+            $table->index('is_read'); // If filtering messages by read status
         });
     }
 

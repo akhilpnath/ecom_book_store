@@ -24,6 +24,9 @@ return new class extends Migration
             $table->string('placed_on', 50);
             $table->string('payment_status', 20)->default('pending');
             $table->timestamps();
+            $table->index('user_id'); // Foreign key indexing
+            $table->index('email'); // Searching by email
+            $table->index(['user_id', 'payment_status']); // Composite index for faster queries
         });
     }
 

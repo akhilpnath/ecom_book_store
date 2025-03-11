@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewOrderConfirmaationEvent;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Cart;
@@ -93,6 +94,8 @@ class UserOrderController extends Controller
             'placed_on' => now(),
             'payment_status' => 'pending',
         ]);
+
+        NewOrderConfirmaationEvent::dispatch($order);
 
         // Clear the cart after order placement
         Cart::where('user_id', Auth::id())->delete();

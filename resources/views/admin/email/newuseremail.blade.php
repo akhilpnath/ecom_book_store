@@ -6,7 +6,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New User Registration - Admin Notification</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/useradminemail.css') }}">
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .header {
+            text-align: center;
+            padding: 15px 0;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 6px 6px 0 0;
+            margin-bottom: 20px;
+        }
+
+        .user-details {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #777;
+            font-size: 12px;
+        }
+
+        .btn-primary {
+            background-color: #2c3e50;
+            border-color: #2c3e50;
+            padding: 8px 16px;
+            font-weight: bold;
+            margin: 15px 0;
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 
 <body>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewUserCreatedEvent;
 use App\Mail\NewUserCreated;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -61,13 +62,8 @@ class AuthController extends Controller
 
         // Mail::to($user->email)->cc('admin@gmail.com')->bcc('admin@gmail.com')->send(new NewUserCreated($user));
 
-        // Send email to the user
-        Mail::to($user->email)
-            ->send(new NewUserCreated($user, false));
-
-        // Send separate email to admin with all details
-        Mail::to('admin@gmail.com')
-            ->send(new NewUserCreated($user, true));
+        event(new NewUserCreatedEvent($user));
+        //    NewUserCreatedEvent::dispatch($user); for this one if we use the quee system
 
         return redirect()->route('user.home')->with('success', 'Registration successful!');
 

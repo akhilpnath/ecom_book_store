@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->integer('price');
             $table->integer('quantity');
-            $table->string('image', 1000);
+            $table->string('image', 1000)->nullable();
             $table->timestamps();
             $table->index('user_id'); // Foreign key indexing
             $table->index('product_id'); // Foreign key indexing

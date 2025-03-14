@@ -18,16 +18,16 @@ class AdminDashboardController extends Controller
         COUNT(*) as totalAccounts, 
         SUM(CASE WHEN status = '0' THEN 1 ELSE 0 END) as inactiveUsers, 
         SUM(CASE WHEN user_type = 'admin' THEN 1 ELSE 0 END) as totalAdmins
-    ")->first();
+        ")->first();
 
         // Load order statistics in a single query
         $orderStats = Order::selectRaw("
-    SUM(CASE WHEN payment_status = 'pending' THEN total_price ELSE 0 END) as totalPendings, 
-    SUM(CASE WHEN payment_status = 'completed' THEN total_price ELSE 0 END) as totalCompleted,
-    COUNT(*) as totalOrders,
-    COUNT(CASE WHEN payment_status = 'pending' THEN 1 END) as totalPendingOrders,
-    COUNT(CASE WHEN payment_status = 'completed' THEN 1 END) as totalCompletedOrders
-")->first();
+        SUM(CASE WHEN payment_status = 'pending' THEN total_price ELSE 0 END) as totalPendings, 
+        SUM(CASE WHEN payment_status = 'completed' THEN total_price ELSE 0 END) as totalCompleted,
+        COUNT(*) as totalOrders,
+        COUNT(CASE WHEN payment_status = 'pending' THEN 1 END) as totalPendingOrders,
+        COUNT(CASE WHEN payment_status = 'completed' THEN 1 END) as totalCompletedOrders
+        ")->first();
 
 
         $totalProducts = Product::count();

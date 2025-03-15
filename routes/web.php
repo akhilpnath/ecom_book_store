@@ -74,6 +74,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::delete('/address/delete/{address}', [UserAddressController::class, 'delete'])->name('user.address.delete');
     // user account delete
     Route::delete('/users/{user}', [UserController::class, 'destroyUserAccount'])->name('users.destroy');
+    Route::post('/users/export/userdetails', [UserController::class, 'exportUserDetails'])->name('user.export.userdetails');
 });
 
 // Admin Routes
@@ -99,6 +100,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/users', [AdminUserController::class, 'updateOrCreateUsers'])->name('admin.users.updateOrCreateUsers');
     Route::post('/admin/users/{user}/toggle-status', [AdminUserController::class, 'updateUserActiveStatus'])->name('admin.users.updateUserStatus');
     Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+    Route::get('admin/users/allusers', [AdminUserController::class, 'exportAllUsers'])->name('admin.users.exportallusers');
 
     // Messages Routes
     Route::get('/admin/messages', [AdminMessageController::class, 'index'])->name('admin.messages.index');

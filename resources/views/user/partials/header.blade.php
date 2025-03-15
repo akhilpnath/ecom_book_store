@@ -54,6 +54,14 @@
                                 </a>
                             </li>
                             <li>
+                                <form action="{{ route('user.export.userdetails') }}" method="POST" class="m-0 p-0">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-file-export me-2"></i> Export
+                                    </button>
+                                </form>
+                            </li>
+                            <li>
                                 <form action="{{ route('logout') }}" method="POST" class="m-0 p-0">
                                     @csrf
                                     <button type="submit" class="dropdown-item text-danger">
@@ -62,10 +70,11 @@
                                 </form>
                             </li>
                             <li>
-                                <form action="{{ route('users.destroy',Auth::id()) }}" method="POST" class="m-0 p-0">
+                                <form action="{{ route('users.destroy', Auth::id()) }}" method="POST" class="m-0 p-0">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="dropdown-item text-danger" onclick="return confirm('are you sure want to delete your account?')">
+                                    <button type="submit" class="dropdown-item text-danger"
+                                        onclick="return confirm('are you sure want to delete your account?')">
                                         <i class="fas fa-sign-out-alt me-2"></i> Account delete
                                     </button>
                                 </form>

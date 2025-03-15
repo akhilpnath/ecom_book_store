@@ -4,9 +4,14 @@
     <div class="container-fluid py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="fw-bold"><i class="fas fa-users text-primary me-2"></i>User Management</h1>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                <i class="fas fa-user-plus me-2"></i>Add New User
-            </button>
+            <div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                    <i class="fas fa-user-plus"></i>Add New User
+                </button>
+                <a class="btn btn-success" href="{{ route('admin.users.exportallusers') }}">
+                    <i class="fas fa-file-export "></i>Export
+                </a>
+            </div>
         </div>
 
         <div class="card shadow-sm mb-4">
@@ -365,4 +370,3 @@
         });
     </script>
 @endpush
-

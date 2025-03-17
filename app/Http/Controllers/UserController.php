@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class UserController extends Controller
 {
@@ -70,8 +71,14 @@ class UserController extends Controller
                 ? [$this->mapUserData($user)]
                 : $user->orders->map(fn($order) => $this->mapUserData($user, $order))
             );
-
-        return (new FastExcel($data))->download('exportUserDetails.xlsx');
+        if (request()->has('excel')) {
+            return (new FastExcel($data))->download('UserReport.xlsx');
+        } elseif (request()->has('csv')) {
+            return (new FastExcel($data))->download('UserReport.csv');
+        } else {
+            $pdf = Pdf::loadView('user.pdf.exportusers', ['users' => $data]);
+            return $pdf->download('UserReport.pdf');
+        }
     }
 
     private function mapUserData($user, $order = null)

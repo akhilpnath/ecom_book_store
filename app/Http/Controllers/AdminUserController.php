@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminUserController extends Controller
 {
@@ -96,23 +97,45 @@ class AdminUserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully!');
     }
 
-    public function exportAllUsers()
+    public function exportAllUsersDeatils()
     {
         $users = User::where('user_type', 'user')->get(['name', 'email', 'status', 'user_type', 'image', 'created_at']);
-
-        return (new FastExcel($users))->download(
-            'exportuserdetailsadmin.xlsx',
-            function ($users) {
-                return [
-                    'Name' => $users->name ?? 'N/A',
-                    'Email'=>$users->email ?? 'N/A',
-                    'Role' => $users->user_type ?? 'N/A',
-                    'Account Created' => $users->created_at ?? 'N/A',
-                    'Status' => $users->active_status ?? 'N/A',
-                    'Image'=>$users->image ?? 'N/A',
-                    'Activity' => now()->subHours(rand(1, 72))->format('M d, g:i A') ?? 'N/A',
-                ];
-            }
-        );
+        // export to excel
+        if (request()->has('excel')) {
+            return (new FastExcel($users))->download(
+                'exportuserdetailsadmin.xlsx',
+                function ($user) {
+                    return [
+                        'Name' => $user->name ?? 'N/A',
+                        'Email' => $user->email ?? 'N/A',
+                        'Role' => $user->user_type ?? 'N/A',
+                        'Account Created' => $user->created_at ?? 'N/A',
+                        'Status' => $user->active_status ?? 'N/A',
+                        'Image' => $user->image ?? 'N/A',
+                        'Activity' => now()->subHours(rand(1, 72))->format('M d, g:i A') ?? 'N/A',
+                    ];
+                }
+            );
+            // export to csv
+        } elseif (request()->has('csv')) {
+            return (new FastExcel($users))->download(
+                'exportuserdetailsadmin.csv',
+                function ($user) {
+                    return [
+                        'Name' => $user->name ?? 'N/A',
+                        'Email' => $user->email ?? 'N/A',
+                        'Role' => $user->user_type ?? 'N/A',
+                        'Account Created' => $user->created_at ?? 'N/A',
+                        'Status' => $user->active_status ?? 'N/A',
+                        'Image' => $user->image ?? 'N/A',
+                        'Activity' => now()->subHours(rand(1, 72))->format('M d, g:i A') ?? 'N/A',
+                    ];
+                }
+            );
+            // export to pdf
+        } else {
+            $pdf = Pdf::loadView('admin.pdf.userdeatils', ['users' => $users]);
+            return $pdf->download('exportuserdetailsadmin.pdf');
+        }
     }
 }

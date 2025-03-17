@@ -3,14 +3,39 @@
 @section('content')
     <div class="container-fluid py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="fw-bold"><i class="fas fa-users text-primary me-2"></i>User Management</h1>
-            <div>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                    <i class="fas fa-user-plus"></i>Add New User
+            <h1 class="fw-bold">
+                <i class="fas fa-users text-primary me-2"></i>User Management
+            </h1>
+
+            <div class="d-flex align-items-center">
+                <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                    <i class="fas fa-user-plus"></i> Add New User
                 </button>
-                <a class="btn btn-success" href="{{ route('admin.users.exportallusers') }}">
-                    <i class="fas fa-file-export "></i>Export
-                </a>
+
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle d-flex align-items-center" type="button"
+                        id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-file-export me-2"></i> Export
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('admin.users.exportallusers', ['excel' => true]) }}">
+                                <i class="fas fa-file-excel text-success me-2"></i> Export as Excel
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('admin.users.exportallusers', ['pdf' => true]) }}">
+                                <i class="fas fa-file-pdf text-danger me-2"></i> Export as PDF
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('admin.users.exportallusers', ['csv' => true]) }}">
+                                <i class="fas fa-file-csv text-warning me-2"></i> Export as CSV
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
             </div>
         </div>
 

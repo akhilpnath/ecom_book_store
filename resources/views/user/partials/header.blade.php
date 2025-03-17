@@ -53,13 +53,31 @@
                                     <i class="fa fa-address-card me-2"></i> User Address
                                 </a>
                             </li>
-                            <li>
-                                <form action="{{ route('user.export.userdetails') }}" method="POST" class="m-0 p-0">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item">
-                                        <i class="fas fa-file-export me-2"></i> Export
-                                    </button>
-                                </form>
+                            <!-- Export Dropdown -->
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item" href="#" id="exportDropdown">
+                                    <i class="fas fa-file-export me-2"></i> Export
+                                </a>
+                                <ul class="dropdown-menu" id="exportDropdownMenu">
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('user.export.userreport', ['excel' => true]) }}">
+                                            <i class="fas fa-file-excel text-success me-2"></i> Export Excel
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('user.export.userreport', ['pdf' => true]) }}">
+                                            <i class="fas fa-file-pdf text-danger me-2"></i> Export PDF
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('user.export.userreport', ['csv' => true]) }}">
+                                            <i class="fas fa-file-csv text-warning me-2"></i> Export CSV
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST" class="m-0 p-0">
@@ -74,14 +92,13 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="dropdown-item text-danger"
-                                        onclick="return confirm('are you sure want to delete your account?')">
+                                        onclick="return confirm('Are you sure you want to delete your account?')">
                                         <i class="fas fa-sign-out-alt me-2"></i> Account delete
                                     </button>
                                 </form>
                             </li>
                         </ul>
                     </div>
-
                 @else
                     <a href="{{ route('login') }}" class="btn btn-outline-primary ms-3">Login</a>
                 @endauth
@@ -89,3 +106,22 @@
         </div>
     </div>
 </nav>
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const exportDropdown = document.getElementById('exportDropdown');
+        const exportDropdownMenu = document.getElementById('exportDropdownMenu');
+
+        exportDropdown.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent parent dropdown from closing
+            exportDropdownMenu.classList.toggle('show');
+        });
+
+        // Close the export dropdown if clicked outside
+        document.addEventListener('click', (event) => {
+            if (!exportDropdown.contains(event.target) && !exportDropdownMenu.contains(event.target)) {
+                exportDropdownMenu.classList.remove('show');
+            }
+        });
+    });
+</script>

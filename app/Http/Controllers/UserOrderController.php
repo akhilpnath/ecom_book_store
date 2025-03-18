@@ -8,6 +8,8 @@ use App\Models\Order;
 use App\Models\Cart;
 use App\Models\Address;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserOrderController extends Controller
 {
@@ -82,24 +84,41 @@ class UserOrderController extends Controller
             return $item->price * $item->quantity;
         });
 
-        $order = Order::create([
-            'user_id' => Auth::id(),
-            'name' => $request->name,
-            'number' => $request->number,
-            'email' => $request->email,
-            'method' => $request->method,
-            'address' => $shippingAddress,
-            'total_products' => $cartItems->pluck('name')->implode(', '),
-            'total_price' => $totalPrice,
-            'placed_on' => now(),
-            'payment_status' => 'pending',
-        ]);
+        try {
+            // Start the transaction
+            DB::beginTransaction();
 
-        NewOrderConfirmaationEvent::dispatch($order);
+            // Create the order
+            $order = Order::create([
+                'user_id' => Auth::id(),
+                'name' => $request->name,
+                'number' => $request->number,
+                'email' => $request->email,
+                'method' => $request->method,
+                'address' => $shippingAddress,
+                'total_products' => $cartItems->pluck('name')->implode(', '),
+                'total_price' => $totalPrice,
+                'placed_on' => now(),
+                'payment_status' => 'pending',
+            ]);
 
-        // Clear the cart after order placement
-        Cart::where('user_id', Auth::id())->delete();
+            // Dispatch the event for new order confirmation
+            event(new NewOrderConfirmaationEvent($order));
 
+            // Clear the cart after order placement
+            Cart::where('user_id', Auth::id())->delete();
+
+            // Commit the transaction
+            DB::commit();
+        } catch (\Exception $e) {
+            // If any exception occurs, roll back the transaction
+            DB::rollBack();
+
+            // log the error or rethrow it
+            Log::error($e->getMessage());
+            // throw $e;
+        }
+        
         return redirect()->route('user.orders')->with('success', 'Your order has been placed successfully!');
     }
 }

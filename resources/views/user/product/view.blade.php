@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @section('content')
-<div class="container py-5">
+<div class="container mt-5 py-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <nav aria-label="breadcrumb" class="mb-4">

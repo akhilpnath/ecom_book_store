@@ -23,10 +23,10 @@
                 <h5 class="mb-4">Contact Info</h5>
                 <ul class="list-unstyled">
                     <li class="mb-2">
-                        <i class="fas fa-phone me-2"></i>+91 8301063455
+                        <i class="fas fa-phone me-2"></i>+91 000000000
                     </li>
                     <li class="mb-2">
-                        <i class="fas fa-envelope me-2"></i>akhilsby789@gmail.com
+                        <i class="fas fa-envelope me-2"></i>gmail@gmail.com
                     </li>
                     <li>
                         <i class="fas fa-map-marker-alt me-2"></i>Kerala, India - 400104

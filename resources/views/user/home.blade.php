@@ -90,7 +90,7 @@
                                 <form action="{{ route('user.cart.add') }}" method="POST" class="mt-auto">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <div class="d-flex align-items-center gap-2 mb-3">
+                                    <div class="d-flex justify-content-center gap-2 mb-3">
                                         <input type="number" min="1" value="1" name="p_qty" class="form-control"
                                             style="width: 100px;">
                                         <a href="{{ route('user.product.view', $product->id) }}"

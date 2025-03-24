@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Cache;
 
 class Product extends Model
 {
-    use HasFactory,Cachable;
+    use HasFactory, Cachable;
 
     protected $fillable = [
         'name',
@@ -17,7 +17,7 @@ class Product extends Model
         'details',
         'price',
         'image',
-        'authors', 
+        'authors',
         'language',
     ];
 
@@ -38,21 +38,23 @@ class Product extends Model
         static::created(function () {
             // Cache::tags(['products'])->flush();
             cache()->forget('categories_list');
+            cache()->forget('products_list');
         });
 
-        static::updated(function(){
+        static::updated(function () {
             // Cache::tags(['products'])->flush();
             cache()->forget('categories_list');
+            cache()->forget('products_list');
         });
-        static::deleted(function(){
-          // Cache::tags(['products'])->flush();
-          cache()->forget('categories_list');
-        });
-        static::saved(function(){
+        static::deleted(function () {
             // Cache::tags(['products'])->flush();
             cache()->forget('categories_list');
+            cache()->forget('products_list');
         });
-        
-
+        static::saved(function () {
+            // Cache::tags(['products'])->flush();
+            cache()->forget('categories_list');
+            cache()->forget('products_list');
+        });
     }
 }

@@ -13,11 +13,12 @@ class UserWishlistController extends Controller
     public function index()
     {
         $wishlistItems = Wishlist::where('user_id', Auth::id())->get();
-        $cartItems = Cart::where('user_id', Auth::id())->get();
-        $grandTotal = $cartItems->sum(function ($item) {
-            return $item->price * $item->quantity;
-        });
+        $grandTotal = round($wishlistItems->sum(function ($item) {
+            return $item->price;
+        }), 2);
+
         return view('user.wishlist', compact('wishlistItems', 'grandTotal'));
+
     }
 
     public function add(Request $request)
@@ -50,14 +51,21 @@ class UserWishlistController extends Controller
 
     public function delete($id)
     {
-        $wishlistItem = Wishlist::findOrFail($id);
+        $wishlistItem = Wishlist::where('id', $id)->where('user_id', Auth::id())->first();
+
+        if (!$wishlistItem) {
+            return response()->json(['error' => 'Product not found in your wishlist!']);
+        }
+
         $wishlistItem->delete();
+
         return redirect()->back()->with('success', 'Product removed from wishlist!');
     }
 
     public function deleteAll()
     {
         Wishlist::where('user_id', Auth::id())->delete();
+
         return redirect()->back()->with('success', 'Wishlist cleared!');
     }
 }

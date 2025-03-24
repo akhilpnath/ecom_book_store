@@ -33,20 +33,22 @@ class UserCartController extends Controller
             ->first();
 
         if ($cartItem) {
-            return redirect()->back()->with('error', 'Product already in cart!');
+            $cartItem->update([
+                'quantity' => $cartItem->quantity + $request->p_qty
+            ]);
+            return redirect()->back()->with('success', 'Product quantity updated in cart!');
+        } else {
+            Cart::create([
+                'user_id' => Auth::id(),
+                'product_id' => $request->product_id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'quantity' => $request->p_qty,
+                'image' => $product->image,
+            ]);
+
+            return redirect()->back()->with('success', 'Product added to cart!');
         }
-
-        // Add to cart
-        Cart::create([
-            'user_id' => Auth::id(),
-            'product_id' => $request->product_id,
-            'name' => $product->name,
-            'price' => $product->price,
-            'quantity' => $request->p_qty,
-            'image' => $product->image,
-        ]);
-
-        return redirect()->back()->with('success', 'Product added to cart!');
     }
 
     public function update(Request $request)

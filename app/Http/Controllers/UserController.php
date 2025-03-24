@@ -15,8 +15,7 @@ class UserController extends Controller
 {
     public function home()
     {
-
-        $products = Cache::remember('categories_list', now()->addHours(3), function () {
+        $products = Cache::remember('products_list', now()->addHours(3), function () {
             return Product::latest()->limit(8)->get();
         });
 

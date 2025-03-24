@@ -112,4 +112,10 @@ return [
 
     'password_timeout' => 10800,
 
+    // remeber token expires in 2 hours
+    'session' => [
+        'expire_on_close' => false, // Keep the session alive after closing browser
+        'lifetime' => 120, // 120 minutes = 2 hours
+    ],
+
 ];

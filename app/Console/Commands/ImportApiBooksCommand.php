@@ -76,7 +76,7 @@ class ImportApiBooksCommand extends Command
                 $firstCategory = is_array($categories) ? ($categories[0] ?? null) : $categories;
                 $book->category = $firstCategory ? explode(' / ', $firstCategory)[0] : null;
                 $book->language = $volumeInfo['language'] ?? null;
-                $book->price = rand(1, 3000);
+                $book->price = rand(200, 3000);
                 $book->details = $volumeInfo['description'] ?? null;
                 $book->image = $volumeInfo['imageLinks']['thumbnail'] ?? null;
                 $book->save();

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Events\NewUserCreatedEvent;
+use App\Http\Controllers\Controller;
 use App\Mail\NewUserCreated;
 use Illuminate\Http\Request;
 use App\Models\User;

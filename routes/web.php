@@ -1,21 +1,21 @@
 <?php
 
 use App\Http\Controllers\Admin\BookController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserAddressController;
+use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\UserAddressController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\AdminProductController;
-use App\Http\Controllers\AdminOrderController;
-use App\Http\Controllers\AdminUserController;
-use App\Http\Controllers\AdminMessageController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserProductController;
-use App\Http\Controllers\UserOrderController;
-use App\Http\Controllers\UserWishlistController;
-use App\Http\Controllers\UserCartController;
-use App\Http\Controllers\UserMessageController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminProductController;
+use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminMessageController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\User\UserProductController;
+use App\Http\Controllers\User\UserOrderController;
+use App\Http\Controllers\User\UserWishlistController;
+use App\Http\Controllers\User\UserCartController;
+use App\Http\Controllers\User\UserMessageController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -120,3 +120,13 @@ Route::prefix('admin')->group(function () {
     Route::get('/books/search/results', [BookController::class, 'search'])->name('admin.books.search.results');
     Route::post('/books/import/{volumeId}', [BookController::class, 'import'])->name('admin.books.import');
 });
+
+
+
+
+
+
+
+
+
+
